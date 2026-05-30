@@ -1,0 +1,26 @@
+
+import { useEffect, useState } from "react";
+import io from "socket.io-client";
+
+let socket;
+
+export default function useChat(room) {
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    socket = io({ path: "/api/socket" });
+    socket.emit("joinRoom", room);
+
+    socket.on("receiveMessage", (msg) => {
+      setMessages((prev) => [...prev, msg]);
+    });
+
+    return () => socket.disconnect();
+  }, [room]);
+
+  const sendMessage = (text, user) => {
+    socket.emit("sendMessage", { room, text, user });
+  };
+
+  return { messages, sendMessage };
+}
