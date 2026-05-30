@@ -1,0 +1,19 @@
+
+model Student {
+  id           String   @id @default(uuid())
+  name         String
+  program      String
+  skills       String[]
+  interests    String[]
+  careerGoals  String?
+  messages     Message[]
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  text      String
+  createdAt DateTime @default(now())
+  student   Student  @relation(fields: [studentId], references: [id])
+  studentId String
+  courseId  String?
+}
